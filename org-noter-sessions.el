@@ -28,22 +28,6 @@
   (org-noter nil t)
   )
 
-;; TODO: save-excursion or/and kill
-;; pdf buffer
-
-(defun +open-pdf-from-session ()
-  "Opens all pdfs from sessions and calls
-     org-noter on them"
-  (mapcar (lambda (file)
-            (with-temp-buffer
-              (find-file (car file)) 
-              (message (car file))
-              (+org-noter-skip-choosing-note))
-            )
-          +org-noter-sessions)
-  )
-
-
 (defun +get-pdf-at-point-and-promt-for-the-buffer ()
   (bibtex-beginning-of-entry)
   (let* ((bibtex-expand-strings t)
@@ -58,6 +42,23 @@
     )
   )
 
+;; TODO: save-excursion or/and kill
+;; pdf buffer
+
+;;;###autoload
+(defun +open-pdf-from-session ()
+  "Opens all pdfs from sessions and calls
+     org-noter on them"
+  (mapcar (lambda (file)
+            (with-temp-buffer
+              (find-file (car file)) 
+              (message (car file))
+              (+org-noter-skip-choosing-note))
+            )
+          +org-noter-sessions)
+  )
+
+;;;###autoload
 (defun +open-pdf-and-call-org-noter (arg)
   "opens pdf and org-noter"
   (interactive "P")
