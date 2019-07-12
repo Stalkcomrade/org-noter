@@ -1941,11 +1941,7 @@ Keymap:
             (,(kbd "C-M-n") . org-noter-sync-next-note)))
 
 ;;;###autoload
-<<<<<<< HEAD
-(defun org-noter (&optional arg stlk-arg)
-=======
 (defun org-noter (&optional arg &rest stlk-arg)
->>>>>>> cc80e959eef70f3c8857eaff4438f3cacb26c91e
   "Start `org-noter' session.
 
 There are two modes of operation. You may create the session from:
