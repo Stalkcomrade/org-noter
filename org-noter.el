@@ -1941,7 +1941,7 @@ Keymap:
             (,(kbd "C-M-n") . org-noter-sync-next-note)))
 
 ;;;###autoload
-(defun org-noter (&optional arg)
+(defun org-noter (&optional arg stlk-arg)
   "Start `org-noter' session.
 
 There are two modes of operation. You may create the session from:
@@ -2146,10 +2146,13 @@ notes file, even if it finds one."
                                                  (file-name-directory (car notes-files)))))
             (setq notes-files-annotating notes-files)))
 
-        (when (> (length notes-files-annotating) 1)
-          (setq notes-files-annotating (list (completing-read "Which notes file should we open? "
-                                                              notes-files-annotating nil t))))
-
+        (if stlk-arg
+            (message "skipping note file chossing")
+          (when (> (length notes-files-annotating) 1)
+            (setq notes-files-annotating (list (completing-read "Which notes file should we open? "
+                                                                notes-files-annotating nil t))))
+          )
+        
         (with-current-buffer (find-file-noselect (car notes-files-annotating))
           (org-with-wide-buffer
            (catch 'break
