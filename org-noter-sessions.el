@@ -1,4 +1,23 @@
+;;; org-noter-sessions.el --- Wrappers for persistent noter sesssions. -*- lexical-binding: t -*-
+
+;; variable for alists
 (setq +org-noter-sessions nil)
+
+;; defining structure
+(cl-defstruct +noter-session name session)
+;; variable for +noter-session objects
+(setq +noter-sessions-object nil)
+
+;; I provide a wrapper for starting org-noter
+;; so, every time session is opened
+;; corresponding pdfs and bib keys
+;; are saved in order to later organised
+;; them into sessions
+
+;; FIXME: those functions
+;; which are not used interactively
+;; and are not exposed to a user
+;; should go with doble dash --
 
 (defun +add-pdf-to-session (pdf key)
   "Add pdf and bibkey to session list"
@@ -56,58 +75,46 @@
     )
   )
 
-
-(defun +utils-print-to-file (filename data)
-  (with-temp-file filename
-    (prin1 data (current-buffer))))
-
-(defun +utils-read-from-file (filename)
-  (with-temp-buffer
-    (insert-file-contents filename)
-    (cl-assert (eq (point) (point-min)))
-    (read (current-buffer))))
+;;;;;;
 
 
-;; defining structure
+;; utils functions
+;; require from utils.el
 
-(cl-defstruct +noter-session name session)
-(setq +noter-sessions-object nil)
-
-(defun +org-noter-save-session ()
-  "Saves session to a file"
-  ;; (message "Session is %s" (read-string "Enter session name:"))
-  (let ((test-input))
-    (setq test-input (read-string "Enter session name:"))
-    (add-to-list '+noter-sessions-object `,(make-+noter-session :name "test" :session `,+org-noter-sessions))
-    (add-to-list '+noter-sessions-object `,(make-+noter-session :name "main" :session `,+org-noter-sessions))
-    )
-  (+utils-print-to-file "~/.emacs.d/org-noter-session.el" `,+org-noter-sessions)
-  )
-
-;; extracting from +noter-sessions-object
-
-(setq xx '(1 2 2 "a"))             ;
-;; remove items that's not a number
-
-;; (-filter (lambda (num) (if (stringp num)
-;;                       nil
-;;                     (= num 1))
-;;            ) xx)
-
-;; (-filter (lambda (num) (+noter-session-name +))
-;;            ) +noter-sessions-object)
-
-;; (+noter-sessions-object)
-
-;; defining structure
-
-
+(require 'utils)
 
 (defun +org-noter-load-session ()
   "Loads session from a file"
   (setq +org-noter-sessions (+utils-read-from-file "~/.emacs.d/org-noter-session.el"))
   )
 
-;; for testing purposes
-;; (+org-noter-load-session)
-;; (+open-pdf-from-session)
+(defun +org-noter-save-session ()
+  "Saves session to a file"
+  ;; (message "Session is %s" (read-string "Enter session name:"))
+  (let ((test-input))
+    (setq test-input (read-string "Enter session name:"))
+    ;; making a cl-struct object
+    (add-to-list '+noter-sessions-object (make-+noter-session :name ,test-input :session `,+org-noter-sessions))
+    )
+  (+utils-print-to-file "~/.emacs.d/org-noter-session.el" `,+org-noter-sessions) ;; FIXME: print full session object
+  )
+
+
+;; extracting from +noter-sessions-object
+;; get session by name
+(defun +org-noter-extract-session (session-name)
+  "Extracts cl-session object"
+  (+noter-session-session
+   (nth 0
+        (-filter (lambda (arg) (equal ,session-name (+noter-session-name arg))) ;; TODO: replace session name
+                 +noter-sessions-object)
+        )
+   )
+  )
+
+;; TODO: provide some tests from
+;; tests.el
+
+(provide 'org-noter-sessions)
+
+;;; org-noter-sessions.el ends here
