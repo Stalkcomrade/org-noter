@@ -102,7 +102,7 @@
 
 (defun +org-noter-load-session ()
   "Loads session from a file"
-  (setq +noter-sessions-object (+utils-read-from-file "~/.emacs.d/org-noter-session.el"))
+  (setq +noter-sessions-object (+utils-read-from-file "./tests/org-noter-session.el"))
   )
 
 ;;;###autoload
@@ -114,7 +114,7 @@
     ;; making a cl-struct object
     (add-to-list '+noter-sessions-object (make-+noter-session :name `,session-name :session `,+org-noter-sessions))
     )
-  (+utils-print-to-file "~/.emacs.d/org-noter-session.el" `,+noter-sessions-object) ;; FIXME: print full session object
+  (+utils-print-to-file "./tests/org-noter-session.el" `,+noter-sessions-object) ;; FIXME: print full session object
   ;; clean local session file
   (setq +org-noter-sessions nil)
   )
