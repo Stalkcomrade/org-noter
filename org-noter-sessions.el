@@ -20,8 +20,21 @@
 ;; should go with doble dash --
 
 (defun +add-pdf-to-session (pdf key)
-  "Add pdf and bibkey to session list"
+  "Add pdf and bibkey to session list
+  Use-case: call when openning from a bib
+  file"
   (add-to-list '+org-noter-sessions `(,pdf . ,key)))
+
+(defun +org-noter--add-to-session ()
+  "Add pdf FILE to a custom session
+   Currently it only works if is called
+   from the pdf buffer
+   Use-case: call when session is already established"
+  (let ((pdf-file (buffer-file-name)))
+    (add-to-list '+org-noter-sessions `(,pdf-file . "nil"))
+    )
+  )
+
 
 (defun +org-noter-skip-choosing-note ()
   "Wrapper for the main org-noter util"
@@ -79,6 +92,7 @@
 ;;;;;;
 
 
+
 ;; utils functions
 ;; require from utils.el
 
@@ -86,18 +100,21 @@
 
 (defun +org-noter-load-session ()
   "Loads session from a file"
-  (setq +org-noter-sessions (+utils-read-from-file "~/.emacs.d/org-noter-session.el"))
+  (setq +noter-sessions-object (+utils-read-from-file "~/.emacs.d/org-noter-session.el"))
   )
 
+;;;###autoload
 (defun +org-noter-save-session ()
   "Saves session to a file"
-  ;; (message "Session is %s" (read-string "Enter session name:"))
-  (let ((test-input))
-    (setq test-input (read-string "Enter session name:"))
+  (interactive)
+  (let ((session-name))
+    (setq session-name (read-string "Enter session name:"))
     ;; making a cl-struct object
-    (add-to-list '+noter-sessions-object (make-+noter-session :name ,test-input :session `,+org-noter-sessions))
+    (add-to-list '+noter-sessions-object (make-+noter-session :name `,session-name :session `,+org-noter-sessions))
     )
-  (+utils-print-to-file "~/.emacs.d/org-noter-session.el" `,+org-noter-sessions) ;; FIXME: print full session object
+  (+utils-print-to-file "~/.emacs.d/org-noter-session.el" `,+noter-sessions-object) ;; FIXME: print full session object
+  ;; clean local session file
+  (setq +org-noter-sessions nil)
   )
 
 
@@ -107,7 +124,7 @@
   "Extracts cl-session object"
   (+noter-session-session
    (nth 0
-        (-filter (lambda (arg) (equal ,session-name (+noter-session-name arg))) ;; TODO: replace session name
+        (-filter (lambda (arg) (equal `,session-name (+noter-session-name arg))) ;; TODO: replace session name
                  +noter-sessions-object)
         )
    )
