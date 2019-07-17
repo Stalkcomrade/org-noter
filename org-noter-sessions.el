@@ -1,5 +1,7 @@
 ;;; org-noter-sessions.el --- Wrappers for persistent noter sesssions. -*- lexical-binding: t -*-
 
+(require 'dash)
+
 ;; variable for alists
 (setq +org-noter-sessions nil)
 
