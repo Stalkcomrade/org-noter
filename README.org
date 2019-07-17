@@ -1,6 +1,7 @@
 [[https://melpa.org/#/org-noter][file:https://melpa.org/packages/org-noter-badge.svg]]
 [[https://stable.melpa.org/#/org-noter][file:https://stable.melpa.org/packages/org-noter-badge.svg]]
-[![Build Status](https://travis-ci.org/Stalkcomrade/org-noter.svg?branch=master)](https://travis-ci.org/Stalkcomrade/org-noter)
+[[https://travis-ci.org/Stalkcomrade/org-noter][file:https://travis-ci.org/Stalkcomrade/org-noter.svg?branch=master]]
+
 * Org-noter - A synchronized, Org-mode, document annotator
 After using Sebastian Christ's amazing [[https://github.com/rudolfochrist/interleave][Interleave package]] for some time, I got some ideas
 on how I could improve upon it, usability and feature-wise. So I created this package from
